@@ -66,9 +66,9 @@ h1 {
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-}
-
-.products .product {
+  }
+  
+  .products .product {
     width: 250px;
     border-radius: 4px;
     padding: 20px;
@@ -78,26 +78,26 @@ h1 {
     flex-direction: column;
     border: 1px solid #000;
     gap: 15px;
-}
-
-.products .product p {
+  }
+  
+  .products .product p {
     width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.products .product img {
+  }
+  .products .product img {
     width: 100px;
     height: 100px;
     object-fit: contain;
-}
-
-.products .product .btn {
+  }
+  
+  .products .product .btn {
     display: flex;
     gap: 15px;
-}
+  }
 
-.products .product button {
+button {
     background: #fff;
     border: none;
     border: 1px solid #000;
@@ -108,7 +108,7 @@ h1 {
     transition: .3s;
 }
 
-.products .product button:hover {
+button:hover {
     background: #000;
     color: #fff;
     border: 1px solid #fff;
