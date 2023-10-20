@@ -18,6 +18,10 @@ header {
     justify-content: center;
 }
 
+header .home a {
+    color: #000;
+}
+
 header nav ul {
     display: flex;
     gap: 20px;
