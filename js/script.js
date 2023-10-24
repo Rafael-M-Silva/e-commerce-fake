@@ -54,7 +54,6 @@ const displayProduct = (data) => {
   }
 }
 
-
 const getProductId = (event) => {
   const product = event.target.closest('.product')
   const productId = product.querySelector('.id-produto').id
