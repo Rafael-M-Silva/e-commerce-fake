@@ -18,8 +18,8 @@ header {
     justify-content: center;
 }
 
-header .home a {
-    color: #000;
+header h1 {
+    cursor: pointer;
 }
 
 header nav ul {
@@ -63,6 +63,7 @@ h1 {
     text-align: center;
     text-transform: uppercase;
     margin-bottom: 20px;
+    color: #000;
 }
 
 .products {
