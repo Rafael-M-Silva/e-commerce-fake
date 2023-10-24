@@ -1,106 +1,87 @@
-const home = () => {
-    document.querySelector('.products').innerHTML = ''
-    document.querySelector('.title h1').innerHTML = `PRODUCTS`
-    let API = `https://fakestoreapi.com/products`
+let productParameter = '';
 
-    fetch(API)
-    .then((res)=> res.json())
-    .then(data => {
-        displayProduct(data)
-    })
-    
-    const displayProduct = (data)=> {
-        const products = document.querySelector('.products')
-        
-        data.forEach((data) => {
-            const { title, price, image, id } = data
-            const productDiv = document.createElement('div')
-            productDiv.classList.add('product')
-            
-            productDiv.innerHTML = `
-                <img src="${image}" alt="">
-                <p class="id-produto" id=${id}>${title}</p>
-                <span>R$${price}</span>
-                <div class="btn">
-                <button>Comprar</button>
-                <button class='btn-produto'>Ver mais</button>
-            `
-            products.appendChild(productDiv)
-            const btnViewMore = document.querySelectorAll('.btn-produto')
-            for(var i = 0; i < btnViewMore.length; i++) {
-                btnViewMore[i].addEventListener('click', viewMore)
-            }        
-        });
-    }
-    
-}
-home()
-
-const viewMore = (event) => {
-    const product = event.target.parentElement.parentElement
-    const productId = product.querySelector('.id-produto')
-
-    window.location.href = `./produto.html?id=${productId.id}`
-}
-
-const buscarCategoria = (event) => {
-    let categorie = event.target.innerHTML
-    let linkCategorie = `/category/${categorie}`
-    document.querySelector('.title h1').innerHTML = `${categorie}`
-
-    const API = `https://fakestoreapi.com/products${linkCategorie}`
-    
-    fetch(API)
-    .then((res)=> res.json())
-    .then(data => {
-        displayProduct(data)
-    })
-
-const displayProduct = (data)=> {
-    document.querySelector('.products').innerHTML = ''
-    const products = document.querySelector('.products')
-    
-    data.forEach((data) => {
-        const { title, price, image, id } = data
-
-        const productDiv = document.createElement('div')
-        productDiv.classList.add('product')
-        
-        productDiv.innerHTML = `
-            <img src="${image}" alt="">
-            <p class="id-produto" id=${id}>${title}</p>
-            <span>R$${price}</span>
-            <div class="btn">
-            <button>Comprar</button>
-            <button class='btn-produto'>Ver mais</button>
-        `
-        products.appendChild(productDiv)
-        const btnViewMore = document.querySelectorAll('.btn-produto')
-        for(var i = 0; i < btnViewMore.length; i++) {
-            btnViewMore[i].addEventListener('click', viewMore)
-        }        
+const eCommerceApi = () => {
+  let api = `https://fakestoreapi.com/products${productParameter}`;
+  fetch(api)
+    .then((res) => res.json())
+    .then((data) => {
+      displayProduct(data);
     });
 }
+eCommerceApi()
+
+const displayProduct = (data) => {
+  const products = document.querySelector('.products');
+  products.innerHTML = '';
+
+  if (Array.isArray(data)) {
+    data.forEach(data => {
+      const { title, price, id, image } = data;
+      const product = document.createElement('div');
+      product.classList.add('product');
+
+      product.innerHTML = `
+        <img src="${image}" alt="">
+        <p class="id-produto" id=${id}>${title}</p>
+        <span>R$${price}</span>
+        <div class="btn">
+          <button>Comprar</button>
+          <button class='btn-produto'>Ver mais</button>
+        </div>
+      `;
+      products.appendChild(product);
+    });
+
+    const btnsVerMais = document.querySelectorAll('.btn-produto');
+    btnsVerMais.forEach((btnVerMais) => {
+      btnVerMais.addEventListener('click', getProductId);
+    });
+    
+  } else {
+    const { title, price, id, image } = data;
+    const product = document.createElement('div');
+    product.classList.add('product');
+
+    product.innerHTML = `
+      <img src="${image}" alt="">
+      <p class="id-produto" id=${id}>${title}</p>
+      <span>R$${price}</span>
+      <div class="btn">
+        <button>Comprar</button>
+      </div>
+    `;
+    products.appendChild(product);
+  }
 }
 
-const btnCategories = document.querySelectorAll('nav ul li a')
-for(var i = 0; i < btnCategories.length; i++) {
-    btnCategories[i].addEventListener('click', buscarCategoria)
+
+const getProductId = (event) => {
+  const product = event.target.closest('.product')
+  const productId = product.querySelector('.id-produto').id
+
+  productParameter = `/${productId}`
+  eCommerceApi()
 }
 
-const voltarHome = document.querySelector('.home')
-voltarHome.addEventListener('click', home)
+const getCategory = (event) => {
+  const btn = event.target;
+  const category = btn.innerHTML;
+  document.querySelector('.title h1').innerHTML = `${category}`
 
+  productParameter = `/category/${category}`;
+  eCommerceApi();
+}
 
+const returnHome = () => {
+  document.querySelector('.title h1').innerHTML = 'products'
+  productParameter = ''
+  eCommerceApi()
+}
 
+const categorys = document.querySelectorAll('header nav ul li a');
+categorys.forEach((category) => {
+  category.addEventListener('click', getCategory);
+});
 
-
-
-
-
-
-
-
-
-
-
+const logoTitle = document.querySelector('.logo-title')
+logoTitle.addEventListener('click', returnHome)
