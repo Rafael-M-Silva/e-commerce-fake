@@ -89,6 +89,20 @@ const addCardBag = (event) => {
   subTotal += parseFloat(productPrice)
   product.querySelector('.lixeira').addEventListener('click', removeProductBag)
   attSubTotal()
+  addPopUp()
+}
+
+const addPopUp = () => {
+  const popUpDiv = document.querySelector('.pop-up')
+  const popUp = document.createElement('p')
+
+  popUp.innerHTML = `Item adicionado com sucesso!`
+
+  popUpDiv.appendChild(popUp)
+
+  setInterval(() => {
+    popUp.remove()
+  }, 1000);
 }
 
 const attSubTotal = () => {
