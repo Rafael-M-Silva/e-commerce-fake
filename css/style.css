@@ -243,7 +243,8 @@ footer p{
 
 .pop-up {
     position: fixed;
-    bottom: 0;
+    bottom: 10px;
+    left: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;

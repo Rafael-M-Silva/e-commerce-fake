@@ -1,18 +1,16 @@
+const products = document.querySelector('.products');
 let productParameter = '';
 let subTotal = 0
 
-const eCommerceApi = () => {
-  let api = `https://fakestoreapi.com/products${productParameter}`;
-  fetch(api)
-    .then((res) => res.json())
-    .then((data) => {
-      displayProduct(data);
-    });
+const eCommerceApi = async () => {
+  products.innerHTML = `<img src = './img/loading.gif'>`
+  const response = await fetch(`https://fakestoreapi.com/products${productParameter}`);
+  const data = await response.json()
+  displayProduct(data);
 }
 eCommerceApi()
 
 const displayProduct = (data) => {
-  const products = document.querySelector('.products');
   products.innerHTML = '';
 
   if (Array.isArray(data)) {
@@ -164,7 +162,7 @@ const finalizarPedido = () => {
   Endereço:
   Rua:
  ______________________________
- Valor total: ${subTotal}
+ Valor total: ${subTotal.toFixed(2)}
 =================================
 Volte sempre ;)
   `)
