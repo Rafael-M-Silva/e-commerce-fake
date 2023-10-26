@@ -1,6 +1,6 @@
 const products = document.querySelector('.products');
 let productParameter = '';
-let subTotal = 0
+
 
 const eCommerceApi = async () => {
   products.innerHTML = `<img src = './img/loading.gif'>`
@@ -64,6 +64,15 @@ const addCardBag = (event) => {
   const productTitle = productInfo.querySelector('.id-produto').innerHTML
   const productPrice = productInfo.querySelector('span').innerHTML.replace('R$','')
 
+
+  const nameProducts = document.querySelectorAll('.card .produto-info h3')
+  for(var i = 0; i < nameProducts.length; i++) {
+    if(nameProducts[i].innerHTML === productTitle) {
+      nameProducts[i].parentElement.parentElement.querySelector('.card .produto-info form #number').value ++
+     return
+    }
+  }
+
   const productsCard = document.querySelector('.products-card')
   const product = document.createElement('div')
   product.classList.add('card')
@@ -81,12 +90,10 @@ const addCardBag = (event) => {
     <p class='price'>R$ ${productPrice}</p>
    </div>
   `
-  
   productsCard.appendChild(product)
-  
-  subTotal += parseFloat(productPrice)
+
+
   product.querySelector('.lixeira').addEventListener('click', removeProductBag)
-  attSubTotal()
   addPopUp()
 }
 
@@ -103,17 +110,8 @@ const addPopUp = () => {
   }, 1000);
 }
 
-const attSubTotal = () => {
-  document.querySelector('.summary p span').innerHTML = `R$ ${subTotal.toFixed(2).replace('.',',').replace('-','')}`
-}
-
 const removeProductBag = (event) => {
   event.target.closest('.card').remove()
-  const card = event.target.closest('.card')
-  const price = card.querySelector('.produto-info .price').innerHTML.replace('R$', '')
-  
-  subTotal -= price
-  attSubTotal()
 }
 
 const getProductId = (event) => {
