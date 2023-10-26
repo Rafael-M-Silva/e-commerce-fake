@@ -1,18 +1,17 @@
+const products = document.querySelector('.products');
 let productParameter = '';
 let subTotal = 0
 
-const eCommerceApi = () => {
-  let api = `https://fakestoreapi.com/products${productParameter}`;
-  fetch(api)
-    .then((res) => res.json())
-    .then((data) => {
-      displayProduct(data);
-    });
+
+const eCommerceApi = async () => {
+  products.innerHTML = `<img src = './img/loading.gif'>`
+  const response = await fetch(`https://fakestoreapi.com/products${productParameter}`);
+  const data = await response.json()
+  displayProduct(data);
 }
 eCommerceApi()
 
 const displayProduct = (data) => {
-  const products = document.querySelector('.products');
   products.innerHTML = '';
 
   if (Array.isArray(data)) {
@@ -39,13 +38,14 @@ const displayProduct = (data) => {
     });
     
   } else {
-    const { title, price, id, image } = data;
+    const { title, price, id, image, description } = data;
     const product = document.createElement('div');
-    product.classList.add('product');
+    product.classList.add('product','product-solo');
 
     product.innerHTML = `
       <img src="${image}" alt="">
-      <p class="id-produto" id=${id}>${title}</p>
+      <h2 class="id-produto" id=${id}>${title}</h2>
+      <i>${description}</i>
       <span>R$${price}</span>
       <div class="btn">
         <button class='comprar-item'>Comprar</button>
@@ -58,6 +58,19 @@ const displayProduct = (data) => {
     btnPurchase.addEventListener('click', addCardBag)
   })
 }
+const attTotalShopping = () => {
+  let total = 0
+  const priceProduct = document.querySelectorAll('.card .produto-info .price')
+  for(var i = 0; i < priceProduct.length; i++) {
+    const price = priceProduct[i].innerHTML.replace('R$', '')
+    const qtd = priceProduct[i].parentElement.querySelector('form #number').value
+    
+    total += price * qtd
+    subTotal = total
+  }
+
+  document.querySelector('.summary span').innerHTML = `R$ ${total.toFixed(2)}`
+}
 
 const addCardBag = (event) => {
   const btnProduct = event.target
@@ -65,6 +78,16 @@ const addCardBag = (event) => {
   const productImage = productInfo.querySelector('img').src
   const productTitle = productInfo.querySelector('.id-produto').innerHTML
   const productPrice = productInfo.querySelector('span').innerHTML.replace('R$','')
+
+  const nameProducts = document.querySelectorAll('.card .produto-info h3')
+  for(var i = 0; i < nameProducts.length; i++) {
+    if(nameProducts[i].innerHTML === productTitle) {
+      nameProducts[i].parentElement.parentElement.querySelector('.card .produto-info form #number').value ++
+      attTotalShopping()
+      addPopUp()
+     return
+    }
+  }
 
   const productsCard = document.querySelector('.products-card')
   const product = document.createElement('div')
@@ -78,18 +101,19 @@ const addCardBag = (event) => {
     <img src="${productImage}" alt="">
     <h3>${productTitle}</h3>
     <form>
-      <input type="number" name="number" id="number" placeholder="qtd" value="1">
+      <input type="number" name="number" id="number" placeholder="qtd" value="1" min="1">
     </form>
     <p class='price'>R$ ${productPrice}</p>
    </div>
   `
-  
   productsCard.appendChild(product)
-  
-  subTotal += parseFloat(productPrice)
+
+
   product.querySelector('.lixeira').addEventListener('click', removeProductBag)
-  attSubTotal()
+  product.querySelector('.produto-info form #number').addEventListener('change', attTotalShopping)
+
   addPopUp()
+  attTotalShopping()
 }
 
 const addPopUp = () => {
@@ -105,17 +129,10 @@ const addPopUp = () => {
   }, 1000);
 }
 
-const attSubTotal = () => {
-  document.querySelector('.summary p span').innerHTML = `R$ ${subTotal.toFixed(2).replace('.',',').replace('-','')}`
-}
-
 const removeProductBag = (event) => {
   event.target.closest('.card').remove()
-  const card = event.target.closest('.card')
-  const price = card.querySelector('.produto-info .price').innerHTML.replace('R$', '')
-  
-  subTotal -= price
-  attSubTotal()
+  subTotal = 0
+  attTotalShopping()
 }
 
 const getProductId = (event) => {
@@ -164,7 +181,7 @@ const finalizarPedido = () => {
   Endereço:
   Rua:
  ______________________________
- Valor total: ${subTotal}
+ Valor total: ${subTotal.toFixed(2)}
 =================================
 Volte sempre ;)
   `)
