@@ -251,9 +251,31 @@ footer p{
 }
 
 .pop-up p {
-    background: #fff;
+    background: #000000;
     padding: 20px;
-    border: 1px solid #000;
+    border: 1px solid #ffffff;
     font-weight: bold;
+    color: #fff;
     border-radius: 4px;
+}
+
+.busca-cep .cep {
+    display: flex;
+    border: 2px solid #000;
+}
+
+.busca-cep .cep button {
+    box-shadow: none;
+    padding: 0;
+    width: 100%;
+    border: none;
+}
+.busca-cep .cep button:hover {
+    transform: translate(0);
+}
+
+.busca-cep .cep input {
+    outline: none;
+    border: none;
+    padding: 4px;
 }

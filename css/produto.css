@@ -1,45 +1,8 @@
-main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.products {
-  justify-content: start;
-}
-
-.product-solo {
-  display: flex;
+.products .product-solo {
   width: 100%;
-  gap: 20px;
-  border: 2px solid #000;
-  border-radius: 4px;
-  padding: 20px;
-  justify-content: center;
-  align-items: center;
 }
 
-.product-solo img {
-  width: 40%;
-  object-fit: contain;
-}
-
-.product-solo .sobre {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-}
-
-.product-solo .sobre span {
-  font-weight: bold;
-}
-
-button {
- width: 200px;
-}
-
-@media screen and (max-width: 1000px) {
-  .product-solo {
-    flex-direction: column;
-  }
+.products .product-solo img {
+  width: 400px;
+  height: 400px;
 }

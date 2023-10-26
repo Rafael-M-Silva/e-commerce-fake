@@ -1,5 +1,6 @@
 const products = document.querySelector('.products');
 let productParameter = '';
+let subTotal = 0
 
 
 const eCommerceApi = async () => {
@@ -37,13 +38,14 @@ const displayProduct = (data) => {
     });
     
   } else {
-    const { title, price, id, image } = data;
+    const { title, price, id, image, description } = data;
     const product = document.createElement('div');
-    product.classList.add('product');
+    product.classList.add('product','product-solo');
 
     product.innerHTML = `
       <img src="${image}" alt="">
-      <p class="id-produto" id=${id}>${title}</p>
+      <h2 class="id-produto" id=${id}>${title}</h2>
+      <i>${description}</i>
       <span>R$${price}</span>
       <div class="btn">
         <button class='comprar-item'>Comprar</button>
@@ -56,6 +58,19 @@ const displayProduct = (data) => {
     btnPurchase.addEventListener('click', addCardBag)
   })
 }
+const attTotalShopping = () => {
+  let total = 0
+  const priceProduct = document.querySelectorAll('.card .produto-info .price')
+  for(var i = 0; i < priceProduct.length; i++) {
+    const price = priceProduct[i].innerHTML.replace('R$', '')
+    const qtd = priceProduct[i].parentElement.querySelector('form #number').value
+    
+    total += price * qtd
+    subTotal = total
+  }
+
+  document.querySelector('.summary span').innerHTML = `R$ ${total.toFixed(2)}`
+}
 
 const addCardBag = (event) => {
   const btnProduct = event.target
@@ -64,11 +79,12 @@ const addCardBag = (event) => {
   const productTitle = productInfo.querySelector('.id-produto').innerHTML
   const productPrice = productInfo.querySelector('span').innerHTML.replace('R$','')
 
-
   const nameProducts = document.querySelectorAll('.card .produto-info h3')
   for(var i = 0; i < nameProducts.length; i++) {
     if(nameProducts[i].innerHTML === productTitle) {
       nameProducts[i].parentElement.parentElement.querySelector('.card .produto-info form #number').value ++
+      attTotalShopping()
+      addPopUp()
      return
     }
   }
@@ -85,7 +101,7 @@ const addCardBag = (event) => {
     <img src="${productImage}" alt="">
     <h3>${productTitle}</h3>
     <form>
-      <input type="number" name="number" id="number" placeholder="qtd" value="1">
+      <input type="number" name="number" id="number" placeholder="qtd" value="1" min="1">
     </form>
     <p class='price'>R$ ${productPrice}</p>
    </div>
@@ -94,7 +110,10 @@ const addCardBag = (event) => {
 
 
   product.querySelector('.lixeira').addEventListener('click', removeProductBag)
+  product.querySelector('.produto-info form #number').addEventListener('change', attTotalShopping)
+
   addPopUp()
+  attTotalShopping()
 }
 
 const addPopUp = () => {
@@ -112,6 +131,8 @@ const addPopUp = () => {
 
 const removeProductBag = (event) => {
   event.target.closest('.card').remove()
+  subTotal = 0
+  attTotalShopping()
 }
 
 const getProductId = (event) => {
