@@ -2,6 +2,44 @@ const products = document.querySelector('.products');
 let productParameter = '';
 let subTotal = 0
 
+const dadosCliente = {
+  bairro: '',
+  logradouro: '',
+  localidade: ''
+}
+
+const viaCep = async () => {
+  const cepInput = document.querySelector('#cep');
+  const apiCep = cepInput.value;
+
+  try {
+    let response = await fetch(`https://viacep.com.br/ws/${apiCep}/json/`);
+    let data = await response.json();
+    pegarDadoCliente(data);
+  }
+  catch {
+    document.querySelector('.dados-cep').innerHTML = `Cep Invalido`
+  }
+}
+
+const pegarDadoCliente = (data) => {
+  const { bairro, logradouro, localidade } = data;
+  dadosCliente.bairro = bairro;
+  dadosCliente.logradouro = logradouro;
+  dadosCliente.localidade = localidade;
+
+  document.querySelector('.dados-cep').innerHTML = `
+  <p><b>Bairro:</b> ${dadosCliente.bairro}</p>
+  <p><b>Logradouro:</b> ${dadosCliente.logradouro}</p>
+  <p><b>Localidade:</b> ${dadosCliente.localidade}</p>
+  `
+}
+
+const btnBuscarCep = document.querySelector(".buscar-cep");
+btnBuscarCep.addEventListener('click', () => {
+  viaCep();
+});
+
 
 const eCommerceApi = async () => {
   products.innerHTML = `<img src = './img/loading.gif'>`
@@ -171,22 +209,24 @@ const closedModal = () => {
 const finalizarPedido = () => {
   if(subTotal == 0) {
     alert('Nenhum item no carrinho!')
-    return
+  }else if (dadosCliente.bairro.length == 0) {
+    alert('preencha o campo Cep')
+  }else {
+    alert(`
+    Compra Finaliza com sucesso!
+   ______________________________ 
+    Estado: ${dadosCliente.localidade}
+    Bairro: ${dadosCliente.bairro}
+    Rua: ${dadosCliente.logradouro}
+   ______________________________
+   Valor total: ${subTotal.toFixed(2)}
+  =================================
+  Volte sempre ;)
+    `)
+  
+    window.location.href = './pedidofinalizado.html'
   }
 
-  alert(`
-  Compra Finaliza com sucesso!
- ______________________________ 
-  Estado:
-  Endereço:
-  Rua:
- ______________________________
- Valor total: ${subTotal.toFixed(2)}
-=================================
-Volte sempre ;)
-  `)
-
-  window.location.href = './pedidofinalizado.html'
 }
 
 const categorys = document.querySelectorAll('header nav ul li a');
