@@ -6,3 +6,16 @@
   width: 400px;
   height: 400px;
 }
+
+@media screen and (max-width: 850px) {
+  .products .product-solo img {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .products .product-solo img {
+    width: 100%;
+    height: 100%;
+  }
+}
